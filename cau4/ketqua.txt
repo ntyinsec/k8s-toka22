@@ -1,0 +1,18 @@
+1.
+vim pod.yaml
+##
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx:latest
+  nodeSelector:
+    kubernetes.io/hostname: quoctv-k8s-worker-1
+##
+k apply -f pod.yaml
+
+2.
+k  get pod web -o wide
