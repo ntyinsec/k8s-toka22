@@ -1,0 +1,62 @@
+1.
+quoctv-k8s-master-1 - 172.25.209.155 
+quoctv-k8s-worker-1 - 172.25.209.196
+
+
+2.
+vim deployment.yaml
+##
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webserver
+  name: webserver
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webserver
+  template:
+    metadata:
+      labels:
+        app: webserver
+    spec:
+      containers:
+      - image: nginx:1.19.0
+        name: nginx
+        resources:
+          requests:
+            cpu: "300m"
+          limits:
+            cpu: "500m"
+##
+k apply -f deployment.yaml
+k describe pod webserver-...
+k describe deployments.apps webserver
+
+3.
+vim service.yaml
+##
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webserver
+  name: webserver-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 31000
+  selector:
+    app: webserver
+  type: NodePort
+##
+k apply -f service.yaml
+
+
+4.
+curl http://172.25.209.196:31000
+
