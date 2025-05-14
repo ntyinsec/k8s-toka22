@@ -1,0 +1,30 @@
+k create namespace cau2
+k config set-context --current --namespace=cau2
+vim multi-pod.yaml
+##
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-pod
+spec:
+  containers:
+  - name: pod1
+    image: busybox:1.31.1
+    command: ["/bin/sh", "-c"]
+    args: ["while true; do date >> /vol/date.log; sleep 5; done"]
+    volumeMounts:
+    - name: vol
+      mountPath: /vol
+
+  - name: pod2
+    image: nginx:latest
+    volumeMounts:
+    - name: vol
+      mountPath: /usr/share/nginx/html
+
+  volumes:
+  - name: vol
+    emptyDir: {}
+##
+k apply -f multi-pod.yaml
+k describe pod multi-pod
