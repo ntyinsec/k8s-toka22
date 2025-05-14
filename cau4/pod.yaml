@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx:latest
+  nodeSelector:
+    kubernetes.io/hostname: quoctv-k8s-worker-1
